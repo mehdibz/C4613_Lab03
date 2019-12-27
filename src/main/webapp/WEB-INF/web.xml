@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+
+  <context-param>
+        <param-name>driver</param-name>
+        <param-value>com.microsoft.sqlserver.jdbc.SQLServerDriver</param-value>
+  </context-param>
+  <context-param>
+       <param-name>url</param-name>
+       <param-value>jdbc:sqlserver://Beangrinder.bcit.ca</param-value>
+       <!--  <param-value>jdbc:sqlserver://localhost:1433;databaseName=jspweb</param-value> -->
+  </context-param>
+  <context-param>
+        <param-name>login</param-name>
+        <param-value>javastudent</param-value>
+  </context-param>
+  <context-param>
+        <param-name>pass</param-name>
+        <param-value>lCUZOypsKTJGoVoJFPgkDlFTkqpv3tOY</param-value>
+  </context-param>
+  
+  <!-- Main application Servlet controller -->
+  <servlet>
+    <servlet-name>LabServlet</servlet-name>
+    <servlet-class>ca.bcit.comp4613.lab03.servlet.LabServlet</servlet-class>
+  </servlet>
+  
+  <!-- map URL to main Servlet -->
+  <servlet-mapping>
+    <servlet-name>LabServlet</servlet-name>
+    <url-pattern>/lab</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Register the name "UserSessionFilter" for UserSessionFilter. -->
+  <filter>
+    <filter-name>UserSessionFilter</filter-name>
+    <filter-class>
+      ca.bcit.comp4613.lab03.filter.UserSessionFilter
+    </filter-class>
+  </filter>
+  
+  <!-- Apply the UserSessionFilter filter to the servlet named "/lab". -->
+  <filter-mapping>
+    <filter-name>UserSessionFilter</filter-name>
+    <url-pattern>/user.jsp</url-pattern>
+  </filter-mapping>
+
+
+  <!-- Main application Servlet controller -->
+  <servlet>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>ca.bcit.comp4613.lab03.servlet.Logout</servlet-class>
+  </servlet>
+
+  <!-- map URL to log out Servlet -->
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+
+  <error-page>
+  	<exception-type>java.lang.Throwable</exception-type>
+	<location>/WEB-INF/jsp/error.jsp</location>
+  </error-page>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- Protect users page. Admin or user role only. -->
+   <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Search</web-resource-name>
+      <url-pattern>/user.jsp</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>user</role-name>
+      <role-name>admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+ 
+  <!-- Tell the server to use FORM authentication. -->
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <form-login-page>/WEB-INF/jsp/login.jsp</form-login-page>
+      <form-error-page>/WEB-INF/jsp/login-error.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
+  
+</web-app>
